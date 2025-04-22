@@ -3,37 +3,43 @@
 # Objectives
 In this assignment, you will:
 
-Access a high-performance computing environment
-Install and use different sequence alignment tools
-Compare global and local alignment algorithms
-Analyze alignment results for human genomic data
-Prerequisites
-Basic understanding of Linux commands
-Familiarity with FASTA file format
-Understanding of sequence alignment concepts
-Assignment Steps
-Step 1: Access the Palmetto2 Cluster
+* Access a high-performance computing environment
+* Install and use different sequence alignment tools
+* Compare global and local alignment algorithms
+* Analyze alignment results for human genomic data
+
+# Prerequisites
+* Basic understanding of Linux commands
+* Familiarity with FASTA file format
+* Understanding of sequence alignment concepts
+
+# Assignment Steps
+## Step 1: Access the Palmetto2 Cluster
 Open your web browser and navigate to https://ondemand.rcd.clemson.edu/
 Log in using your Clemson credentials
 Complete any multi-factor authentication if required
-Step 2: Request Interactive Computing Resources
+
+## Step 2: Request Interactive Computing Resources
 From the dashboard, click on "Interactive Apps" in the top navigation menu
 Select "Jupyter Notebook" from the dropdown menu
 Configure your session with the following specifications:
+```
 Number of cores: 4
 Memory: 32GB
 Wall time (job duration): 12:00:00 (12 hours)
 Partition: Choose an appropriate partition based on availability
 QOS: Select regular (or as recommended by your instructor)
+```
+
 Click "Launch" to submit your resource request
 Wait for your job to start (may take a few minutes)
-Step 3: Access Terminal in Jupyter
+
+## Step 3: Access Terminal in Jupyter
 When your Jupyter session is ready, click on "Connect to Jupyter"
 In the Jupyter interface, click "New" in the top right corner
 Select "Terminal" from the dropdown menu
 
 ## Step 4: Create Working Directory
-
 ```
 # Navigate to your scratch space
 cd /scratch/$USER
