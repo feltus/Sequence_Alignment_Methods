@@ -217,7 +217,7 @@ chmod +x compare_alignments.py
 python compare_alignments.py
 ```
 
-# Assignment Questions
+# Self Questions
 * What are the key differences you observed between BLAST and Smith-Waterman alignments?
 * Why is BLAST significantly faster than Smith-Waterman for genomic sequence alignments?
 * In what scenarios would you prefer to use Smith-Waterman over BLAST?
@@ -225,14 +225,6 @@ python compare_alignments.py
 * What challenges did you encounter aligning cDNA sequences to genomic DNA, and why?
 * How would the alignment results differ if you used Needleman-Wunsch instead of Smith-Waterman?
 * Based on your results, what percentage of your cDNA sequences aligned well to the genome?
-# Submission Requirements
-Submit a ZIP file containing:
-
-* A detailed lab report (in Markdown or PDF format) answering all the questions above
-* Screenshots showing successful execution of each major step
-* The output files from your BLAST and Smith-Waterman alignments
-* Your analysis script and any generated plots
-* A reflection on what you learned about sequence alignment algorithms (500 words)
 
 # Generative AI Prompts
 ## Prompt 1: Understanding Pairwise vs. Global Sequence Alignment
