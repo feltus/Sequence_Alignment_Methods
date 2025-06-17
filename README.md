@@ -258,9 +258,7 @@ I'm comparing sequence alignment results between BLAST and Smith-Waterman for a 
 ```
 
 # Additional Resources
-BLAST Documentation (https://www.ncbi.nlm.nih.gov/books/NBK279690/)
-EMBOSS Water Documentation (https://www.bioinformatics.nl/cgi-bin/emboss/help/water)
-EMBOSS Needle Documentation (https://www.bioinformatics.nl/cgi-bin/emboss/help/needle)
-Palmetto2 User Guide (https://docs.rcd.clemson.edu/palmetto/index.html)
-
-# Note: Remember to clean up your workspace when finished by removing large files from scratch space.
+* BLAST Documentation (https://www.ncbi.nlm.nih.gov/books/NBK279690/)
+* EMBOSS Water Documentation (https://www.bioinformatics.nl/cgi-bin/emboss/help/water)
+* EMBOSS Needle Documentation (https://www.bioinformatics.nl/cgi-bin/emboss/help/needle)
+* Palmetto2 User Guide (https://docs.rcd.clemson.edu/palmetto/index.html)
