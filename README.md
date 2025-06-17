@@ -215,7 +215,7 @@ chmod +x compare_alignments.py
 python compare_alignments.py
 ```
 
-# Self Questions
+# Questions for Reflection
 * What are the key differences you observed between BLAST and Smith-Waterman alignments?
 * Why is BLAST significantly faster than Smith-Waterman for genomic sequence alignments?
 * In what scenarios would you prefer to use Smith-Waterman over BLAST?
