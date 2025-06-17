@@ -1,19 +1,17 @@
 # Sequence_Alignment_Methods
 
-# Objectives
-In this assignment, you will:
+# Computational Practice: Sequence Alignment on a High Performance Computer (HPC) cluster.
 
+# Objective
+In this lab, you will access a high-performance computing environment, install bioinformatics software, and perform sequence alignments. These are common computational biology tasks.
+
+# Learning Objectives
 * Access a high-performance computing environment
 * Install and use different sequence alignment tools
 * Compare global and local alignment algorithms
 * Analyze alignment results for human genomic data
 
-# Prerequisites
-* Basic understanding of Linux commands
-* Familiarity with FASTA file format
-* Understanding of sequence alignment concepts
-
-# Assignment Steps
+# Instructions
 ## Step 1: Access the Palmetto2 Cluster
 Open your web browser and navigate to https://ondemand.rcd.clemson.edu/
 Log in using your Clemson credentials
