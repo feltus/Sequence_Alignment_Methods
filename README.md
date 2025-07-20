@@ -54,14 +54,14 @@ pwd
 
 ## Step 5: Install Required Software
 ```
-# Load necessary modules (adjust based on Palmetto2's available modules)
+# Load necessary anaconda modules (adjust based on Palmetto2's available modules). Anaconda environments let you install and isolate software in your home directory.  You can create multiple environments for different purposes.
 module load anaconda3/2023.09-0 
 
-# Create a personal conda environment for sequence alignment tools
+# Create and activate  personal conda environment for sequence alignment tools
 conda create -n alignment_env
 source activate alignment_env
 
-# Install BLAST (blastn,blastp,blastx,tblastn), Smith-Waterman (water) and Needleman-Wunsch (needle) sequence alignment implementations
+# Install BLAST (blastn,blastp,blastx,tblastn), Smith-Waterman (water) and Needleman-Wunsch (needle) sequence alignment tools
 # EMBOSS package contains both water and needle software
 conda install -c bioconda emboss
 
