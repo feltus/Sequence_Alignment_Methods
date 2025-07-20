@@ -87,9 +87,9 @@ tblastn -help
 # Create directories for data in your working directory on scracth (not your home directory, please)
 mkdir -p data/genome data/cdna
 
-# Download human genome (GRCh38) chromosome 1 sequence 
+# Download human genome (GRCh38) chromosome 22 sequence 
 cd /scratch/$USER/sequence_alignment_project/data/genome #Change $USER to your username
-wget https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz
+wget https://ftp.ensembl.org/pub/release-114/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.22.fa.gz
 #Note: The full hg38 genome is available from ENSEMBL at this URL: https://ftp.ensembl.org/pub/release-114/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 
 # Download human cDNA sequence set
@@ -103,7 +103,7 @@ cd /scratch/$USER/sequence_alignment_project/
 ## Step 7: Uncompress the Files
 ```
 # Uncompress genome file
-gunzip data/genome/Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz
+gunzip data/genome/Homo_sapiens.GRCh38.dna.chromosome.22.fa.gz
 
 # Uncompress cDNA file
 gunzip data/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
@@ -113,7 +113,7 @@ ls -lh data/genome/
 ls -lh data/cdna/
 
 # Look at the beginning of each file to confirm content
-head -n 20 data/genome/Homo_sapiens.GRCh38.dna.chromosome.1.fa
+head -n 20 data/genome/Homo_sapiens.GRCh38.dna.chromosome.22.fa
 head -n 20 data/cdna/Homo_sapiens.GRCh38.cdna.all.fa
 ```
 
@@ -121,7 +121,7 @@ head -n 20 data/cdna/Homo_sapiens.GRCh38.cdna.all.fa
 ```
 # Create a BLAST database called 'human_chr1' for BLAST alignments.  Note that '-dbtype nucl' prepares a nucleotide database.  How would you prepare a protein database?
 cd data/genome/
-makeblastdb -in Homo_sapiens.GRCh38.dna.chromosome.1.fa -dbtype nucl -out human_chr1
+makeblastdb -in Homo_sapiens.GRCh38.dna.chromosome.22.fa -dbtype nucl -out human_chr22
 ```
 
 ## Step 9: Perform Sequence Alignments
@@ -129,9 +129,9 @@ makeblastdb -in Homo_sapiens.GRCh38.dna.chromosome.1.fa -dbtype nucl -out human_
 # Create directories for alignment results. Do this in your working directory.
 mkdir -p results/blast results/smith_waterman
 
-# Run the nucleotide-nucleotide BLAST alignment with blastn. 
+# Run the nucleotide-nucleotide BLAST alignment with blastn to see which cDNA align to chromosome 22 
 blastn -query data/cdna/Homo_sapiens.GRCh38.cdna.all.fa \
-       -db data/genome/human_chr1 \
+       -db data/genome/22 \
        -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore" \
        -out results/blast/blast_alignment.tsv
 
