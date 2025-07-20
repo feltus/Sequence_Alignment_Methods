@@ -82,9 +82,9 @@ blastx -help
 tblastn -help
 ```
 
-## Step 6: Download Human Genome and cDNA Datasets
+## Step 6: Download Human Genome and cDNA Datasets in your working directory on scratch
 ```
-# Create directories for data
+# Create directories for data in your working directory on scracth (not your home directory, please)
 mkdir -p data/genome data/cdna
 
 # Download human genome (GRCh38)
