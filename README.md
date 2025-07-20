@@ -55,26 +55,32 @@ pwd
 ## Step 5: Install Required Software
 ```
 # Load necessary modules (adjust based on Palmetto2's available modules)
-module avail blast
-module avail gcc
-module avail python
+module load anaconda3/2023.09-0 
 
-# Load BLAST module (adjust version as needed)
-module load anaconda3/2021.05-gcc
-module load blast/2.12.0-gcc
+# Create a personal conda environment for sequence alignment tools
+conda create -n alignment_env
+source activate alignment_env
 
-# Create a conda environment for additional tools
-conda create -n alignment_env python=3.9 -y
-conda activate alignment_env
+# Install BLAST (blastn,blastp,blastx,tblastn), Smith-Waterman (water) and Needleman-Wunsch (needle) sequence alignment implementations
+# EMBOSS package contains both water and needle software
+conda install -c bioconda emboss
 
-# Install Smith-Waterman and Needleman-Wunsch implementations
-conda install -c bioconda parasail -y  # For efficient Smith-Waterman implementation
-conda install -c bioconda emboss -y    # Contains Needleman-Wunsch implementation (needle)
+# Install BLAST+ suite
+conda install -c bioconda blast
+```
 
 # Verify installations
-which blastn
-which water  # Smith-Waterman in EMBOSS package
-which needle  # Needleman-Wunsch in EMBOSS package
+# Check EMBOSS tools
+```
+water -help
+needle -help
+embossversion
+
+# Check BLAST tools
+blastn -help
+blastp -help
+blastx -help
+tblastn -help
 ```
 
 ## Step 6: Download Human Genome and cDNA Datasets
