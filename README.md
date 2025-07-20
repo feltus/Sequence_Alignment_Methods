@@ -92,7 +92,7 @@ cd /scratch/$USER/sequence_alignment_project/data/genome #Change $USER to your u
 wget https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz
 #Note: The full hg38 genome is available from ENSEMBL at this URL: https://ftp.ensembl.org/pub/release-114/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 
-# Download human cDNA
+# Download human cDNA sequence set
 cd /scratch/$USER/sequence_alignment_project/data/cdna
 wget https://ftp.ensembl.org/pub/release-114/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
 
@@ -117,16 +117,11 @@ head -n 20 data/genome/Homo_sapiens.GRCh38.dna.chromosome.1.fa
 head -n 20 data/cdna/Homo_sapiens.GRCh38.cdna.all.fa
 ```
 
-## Step 8: Prepare for Alignment
+## Step 8: Prepare Sequence Database for Alignment with makeblastdb
 ```
-# Extract a subset of the data for testing (full genome alignment would take too long)
-# Extract first 100 cDNA sequences
-head -n 1000 data/cdna/Homo_sapiens.GRCh38.cdna.chromosome.1.fa > data/cdna/test_cdna.fa
-
-# Create BLAST database for the genome
+# Create a BLAST database called 'human_chr1' for BLAST alignments.  Note that '-dbtype nucl' prepares a nucleotide database.  How would you prepare a protein database?
 cd data/genome/
 makeblastdb -in Homo_sapiens.GRCh38.dna.chromosome.1.fa -dbtype nucl -out human_chr1
-cd ../../
 ```
 
 ## Step 9: Perform Sequence Alignments
