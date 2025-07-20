@@ -68,10 +68,9 @@ conda install -c bioconda emboss
 # Install BLAST+ suite
 conda install -c bioconda blast
 ```
-
 # Verify installations
-# Check EMBOSS tools
 ```
+# Check EMBOSS tools
 water -help
 needle -help
 embossversion
