@@ -126,14 +126,16 @@ makeblastdb -in Homo_sapiens.GRCh38.dna.chromosome.1.fa -dbtype nucl -out human_
 
 ## Step 9: Perform Sequence Alignments
 ```
-# Create directories for alignment results
+# Create directories for alignment results. Do this in your working directory.
 mkdir -p results/blast results/smith_waterman
 
-# Run BLAST alignment
-blastn -query data/cdna/test_cdna.fa \
+# Run the nucleotide-nucleotide BLAST alignment with blastn. 
+blastn -query data/cdna/Homo_sapiens.GRCh38.cdna.all.fa \
        -db data/genome/human_chr1 \
        -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore" \
        -out results/blast/blast_alignment.tsv
+
+#Question: Which program would you use to align protein sequences against a protein database?
 
 # Run Smith-Waterman alignment using EMBOSS water
 # Note: This will be much slower than BLAST, so we'll just do a few sequences
