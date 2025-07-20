@@ -87,16 +87,17 @@ tblastn -help
 # Create directories for data in your working directory on scracth (not your home directory, please)
 mkdir -p data/genome data/cdna
 
-# Download human genome (GRCh38)
-cd data/genome
+# Download human genome (GRCh38) chromosome 1 sequence 
+cd /scratch/$USER/sequence_alignment_project/data/genome #Change $USER to your username
 wget https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz
+#Note: The full hg38 genome is available from ENSEMBL at this URL: https://ftp.ensembl.org/pub/release-114/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 
 # Download human cDNA
-cd ../cdna
-wget https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.chromosome.1.fa.gz
+cd /scratch/$USER/sequence_alignment_project/data/cdna
+wget https://ftp.ensembl.org/pub/release-114/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
 
 # Return to main project directory
-cd ../../
+cd /scratch/$USER/sequence_alignment_project/
 ```
 
 ## Step 7: Uncompress the Files
@@ -105,7 +106,7 @@ cd ../../
 gunzip data/genome/Homo_sapiens.GRCh38.dna.chromosome.1.fa.gz
 
 # Uncompress cDNA file
-gunzip data/cdna/Homo_sapiens.GRCh38.cdna.chromosome.1.fa.gz
+gunzip data/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
 
 # Verify uncompressed files
 ls -lh data/genome/
@@ -113,7 +114,7 @@ ls -lh data/cdna/
 
 # Look at the beginning of each file to confirm content
 head -n 20 data/genome/Homo_sapiens.GRCh38.dna.chromosome.1.fa
-head -n 20 data/cdna/Homo_sapiens.GRCh38.cdna.chromosome.1.fa
+head -n 20 data/cdna/Homo_sapiens.GRCh38.cdna.all.fa
 ```
 
 ## Step 8: Prepare for Alignment
