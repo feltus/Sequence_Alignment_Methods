@@ -124,6 +124,8 @@ nano extract_chr_genes.sh #Copy the script code below and paste into the open fi
 
 #Run the script like this
 extract_chr_genes.sh Homo_sapiens.GRCh38.cdna.all.fa
+# Move the extracted_genes/chr1_first10_genes.fa  extracted_genes/chr22_first10_genes.fa to the data/cnda directory
+mv *.fa /scratch/$USER/sequence_alignment_project/data/cdna #Check to make sure they were moved to the correct path
 ```
 
 Here is the extract_chr_genes.sh script
@@ -280,93 +282,57 @@ makeblastdb -in Homo_sapiens.GRCh38.dna.chromosome.22.fa -dbtype nucl -out human
 # Create directories for alignment results. Do this in your working directory.
 mkdir -p results/blast results/smith_waterman
 
-# Run the nucleotide-nucleotide BLAST alignment with blastn to see which cDNA align to chromosome 22 
-blastn -query data/cdna/Homo_sapiens.GRCh38.cdna.all.fa \
+# Run the nucleotide-nucleotide BLAST alignment with blastn to see which cDNA chr22  align to chromosome 22
+# tabular format
+blastn -query data/cdna/chr22_first10_genes.fa  \
        -db data/genome/human_chr22 \
-       -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore" \
-       -out results/blast/blast_alignment.tsv
+       -outfmt 7 -evalue 1e-100 \
+       -out results/blast/chr22_first10_chr22_blastn_alignment.tsv
 
-#Question: Which program would you use to align protein sequences against a protein database?
+# full alignment format
+blastn -query data/cdna/chr22_first10_genes.fa  \
+       -db data/genome/human_chr22 \
+       -outfmt 0 -evalue 1e-100 \
+       -out results/blast/chr22_first10_chr22_blastn_alignment.txt
+
+# Run the nucleotide-nucleotide BLAST alignment with blastn to see which chr1 cDNA align to chromosome 22
+# tabular format
+blastn -query data/cdna/chr1_first10_genes.fa  \
+       -db data/genome/human_chr22 \
+       -outfmt 7 -evalue 1e-100 \
+       -out results/blast/chr1_first10_chr22_blastn_alignment.tsv
+
+# full alignment format
+blastn -query data/cdna/chr1_first10_genes.fa  \
+       -db data/genome/human_chr22 \
+       -outfmt 0 -evalue 1e-100 \
+       -out results/blast/chr1_first10_chr22_blastn_alignment.txt
+
+#Question: Which BLAST program would you use to align protein sequences against a protein database? Answer=blastp
 
 # Run Smith-Waterman alignment using EMBOSS water
-# Note: This will be much slower than BLAST, so we'll just do a few sequences
-head -n 200 data/cdna/test_cdna.fa > data/cdna/mini_test.fa
-
-# Run water (Smith-Waterman) on a single cDNA sequence against a small portion of the genome
-head -n 2 data/cdna/mini_test.fa > data/cdna/single_cdna.fa
-head -n 10000 data/genome/Homo_sapiens.GRCh38.dna.chromosome.1.fa > data/genome/mini_genome.fa
-
-water -asequence data/cdna/single_cdna.fa \
-      -bsequence data/genome/mini_genome.fa \
+# Run water (Smith-Waterman) on 20 cDNA sequences against themselves (water will not work on huge sequences like BLAST does)
+water -asequence data/cdna/chr22_first10_genes.fa \
+      -bsequence data/cdna/chr22_first10_genes.fa \
       -gapopen 10 -gapextend 0.5 \
-      -outfile results/smith_waterman/water_alignment.txt
+      -outfile results/smith_waterman/water_alignment_chr22first10_chr22first10.txt
 ```
 ## Step 10: Compare Alignment Results
 ```
 # Look at BLAST results
-head results/blast/blast_alignment.tsv
+#View the chr22 versus chr 1 cDNA alignments against chr22 (both output formats).  
+cat results/blast/chr1_first10_chr22_blastn_alignment.tsv
+cat results/blast/chr22_first10_chr22_blastn_alignment.tsv
+cat results/blast/chr1_first10_chr22_blastn_alignment.txt
+cat results/blast/chr22_first10_chr22_blastn_alignment.txt
+#Question: Do you see see more chr22-cdna_chr22 than chr1-cdna_chr22 alignments? Why?
 
 # Count the number of alignments found by BLAST
-wc -l results/blast/blast_alignment.tsv
+wc -l results/blast/chr1_first10_chr22_blastn_alignment.tsv
+wc -l results/blast/chr22_first10_chr22_blastn_alignment.tsv
 
 # Check Smith-Waterman alignment
-cat results/smith_waterman/water_alignment.txt
-
-# Create a Python script to analyze the results
-cat << 'EOF' > compare_alignments.py
-#!/usr/bin/env python3
-
-import pandas as pd
-import matplotlib.pyplot as plt
-import os
-
-# Read BLAST results
-blast_results = pd.read_csv("results/blast/blast_alignment.tsv", sep='\t', 
-                           names=["qseqid", "sseqid", "pident", "length", "mismatch", 
-                                 "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore"])
-
-# Basic statistics on BLAST results
-print("BLAST Alignment Statistics:")
-print(f"Total alignments: {len(blast_results)}")
-print(f"Average percent identity: {blast_results['pident'].mean():.2f}%")
-print(f"Average alignment length: {blast_results['length'].mean():.2f}")
-print(f"Average E-value: {blast_results['evalue'].mean():.2e}")
-
-# Create results directory for plots
-os.makedirs("results/plots", exist_ok=True)
-
-# Create histogram of percent identities
-plt.figure(figsize=(10, 6))
-plt.hist(blast_results['pident'], bins=20, alpha=0.7)
-plt.title("Distribution of Alignment Percent Identities")
-plt.xlabel("Percent Identity")
-plt.ylabel("Count")
-plt.savefig("results/plots/percent_identity_dist.png")
-
-# Create scatter plot of alignment length vs. percent identity
-plt.figure(figsize=(10, 6))
-plt.scatter(blast_results['length'], blast_results['pident'], alpha=0.5)
-plt.title("Alignment Length vs. Percent Identity")
-plt.xlabel("Alignment Length")
-plt.ylabel("Percent Identity")
-plt.savefig("results/plots/length_vs_identity.png")
-
-# Analysis of Smith-Waterman results would typically compare specific alignments
-# but since we only ran it on a small subset, we'll just note how it would be done
-print("\nSmith-Waterman vs BLAST comparison:")
-print("For a complete comparison, you would need to:")
-print("1. Run both algorithms on the same sequences")
-print("2. Compare alignment positions, gaps, and scores")
-print("3. Evaluate sensitivity and specificity")
-print("4. Compare computational performance (time and memory usage)")
-
-EOF
-
-# Make the script executable
-chmod +x compare_alignments.py
-
-# Run the analysis
-python compare_alignments.py
+cat results/smith_waterman/water_alignment_chr22first10_chr22first10.txt
 ```
 
 # Questions for Reflection
