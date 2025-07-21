@@ -124,7 +124,9 @@ nano extract_chr_genes.sh #Copy the script code below and paste into the open fi
 
 #Run the script like this
 extract_chr_genes.sh Homo_sapiens.GRCh38.cdna.all.fa
+```
 
+Here is the extract_chr_genes.sh script
 ```
 #!/bin/bash
 
