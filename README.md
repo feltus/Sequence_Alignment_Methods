@@ -121,11 +121,11 @@ head -n 20 data/cdna/Homo_sapiens.GRCh38.cdna.all.fa
 #Run this script to extract out the first 10 cDNAs from chr1,chr22. This test set will make the BLAST run quicker. To run the script, make an empty file called 'extract_chr_genes.sh' in the same directory as the cDNA file using a text editor. For example, this will work:
 
 nano extract_chr_genes.sh #Copy the script code below and paste into the open file. Press CTRL-X to save the script.
-#Run the script like this
 
+#Run the script like this
 extract_chr_genes.sh Homo_sapiens.GRCh38.cdna.all.fa
 
-----------BEGIN SCRIPT----------------
+```
 #!/bin/bash
 
 # Script to extract first 10 genes from chromosomes 1 and 22 from human cDNA file
@@ -263,7 +263,6 @@ fi
 echo ""
 echo "âœ… Extraction complete! Check the extracted_genes/ directory for results."
 echo "ðŸ’¡ To validate: grep -c '^>' extracted_genes/*.fa"
-------------------------END SCRIPT--------------
 ```
 
 
