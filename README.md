@@ -117,9 +117,159 @@ head -n 20 data/genome/Homo_sapiens.GRCh38.dna.chromosome.22.fa
 head -n 20 data/cdna/Homo_sapiens.GRCh38.cdna.all.fa
 ```
 
+```
+#Run this script to extract out the first 10 cDNAs from chr1,chr22. This test set will make the BLAST run quicker. To run the script, make an empty file called 'extract_chr_genes.sh' in the same directory as the cDNA file using a text editor. For example, this will work:
+
+nano extract_chr_genes.sh #Copy the script code below and paste into the open file. Press CTRL-X to save the script.
+#Run the script like this
+
+extract_chr_genes.sh Homo_sapiens.GRCh38.cdna.all.fa
+
+----------BEGIN SCRIPT----------------
+#!/bin/bash
+
+# Script to extract first 10 genes from chromosomes 1 and 22 from human cDNA file
+# Usage: ./extract_chr_genes.sh Homo_sapiens.GRCh38.cdna.all.fa
+
+# Check if input file is provided
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <cDNA_fasta_file>"
+    echo "Example: $0 Homo_sapiens.GRCh38.cdna.all.fa"
+    exit 1
+fi
+
+INPUT_FILE=$1
+OUTPUT_DIR="extracted_genes"
+CHR1_OUTPUT="${OUTPUT_DIR}/chr1_first10_genes.fa"
+CHR22_OUTPUT="${OUTPUT_DIR}/chr22_first10_genes.fa"
+
+# Check if input file exists
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "Error: Input file '$INPUT_FILE' not found!"
+    exit 1
+fi
+
+# Create output directory
+mkdir -p "$OUTPUT_DIR"
+
+echo "ðŸ§¬ Extracting first 10 genes from chromosomes 1 and 22..."
+echo "ðŸ“ Input file: $INPUT_FILE"
+echo "ðŸ“ Output directory: $OUTPUT_DIR"
+
+# Function to extract sequences for specific chromosome
+extract_chr_genes() {
+    local chr=$1
+    local output_file=$2
+    local max_genes=10
+    
+    echo "ðŸ” Processing chromosome $chr..."
+    
+    # Get headers for specific chromosome and limit to first 10
+    local headers=$(grep "^>.*chromosome:GRCh38:${chr}:" "$INPUT_FILE" | head -n $max_genes)
+    
+    if [ -z "$headers" ]; then
+        echo "âš ï¸  No genes found for chromosome $chr"
+        return 1
+    fi
+    
+    # Count found genes
+    local gene_count=$(echo "$headers" | wc -l)
+    echo "ðŸ“Š Found $gene_count genes for chromosome $chr"
+    
+    # Clear output file
+    > "$output_file"
+    
+    # Extract each gene sequence
+    local count=0
+    while IFS= read -r header; do
+        ((count++))
+        echo "ðŸ§ª Processing gene $count: $(echo "$header" | cut -d' ' -f1)"
+        
+        # Extract transcript ID from header
+        local transcript_id=$(echo "$header" | cut -d' ' -f1 | sed 's/>//')
+        
+        # Use awk to extract the sequence for this specific transcript
+        awk -v target="$header" '
+        BEGIN { found=0; print_seq=0 }
+        /^>/ { 
+            if (print_seq) exit
+            if ($0 == target) {
+                found=1
+                print_seq=1
+                print $0
+            }
+        }
+        /^[^>]/ { 
+            if (print_seq) print $0
+        }
+        ' "$INPUT_FILE" >> "$output_file"
+        
+        echo >> "$output_file"  # Add blank line between sequences
+        
+    done <<< "$headers"
+    
+    echo "âœ… Successfully extracted $count genes for chromosome $chr"
+    return 0
+}
+
+# Extract genes from chromosome 1
+echo "ðŸš€ Starting extraction for chromosome 1..."
+extract_chr_genes "1" "$CHR1_OUTPUT"
+
+# Extract genes from chromosome 22
+echo "ðŸš€ Starting extraction for chromosome 22..."
+extract_chr_genes "22" "$CHR22_OUTPUT"
+
+# Summary statistics
+echo ""
+echo "ðŸ“‹ EXTRACTION SUMMARY:"
+echo "===================="
+
+if [ -f "$CHR1_OUTPUT" ]; then
+    chr1_genes=$(grep -c "^>" "$CHR1_OUTPUT")
+    chr1_size=$(wc -c < "$CHR1_OUTPUT")
+    echo "ðŸ§¬ Chromosome 1: $chr1_genes genes extracted"
+    echo "ðŸ“Š File size: $chr1_size bytes"
+    echo "ðŸ“ Output: $CHR1_OUTPUT"
+fi
+
+if [ -f "$CHR22_OUTPUT" ]; then
+    chr22_genes=$(grep -c "^>" "$CHR22_OUTPUT")
+    chr22_size=$(wc -c < "$CHR22_OUTPUT")
+    echo "ðŸ§¬ Chromosome 22: $chr22_genes genes extracted"
+    echo "ðŸ“Š File size: $chr22_size bytes"
+    echo "ðŸ“ Output: $CHR22_OUTPUT"
+fi
+
+echo ""
+echo "ðŸŽ¯ QUICK VALIDATION:"
+echo "=================="
+
+# Show first few headers from each file
+if [ -f "$CHR1_OUTPUT" ]; then
+    echo "ðŸ” First 3 genes from chromosome 1:"
+    grep "^>" "$CHR1_OUTPUT" | head -n 3 | while read line; do
+        echo "  â€¢ $(echo "$line" | cut -d' ' -f1,7)"
+    done
+fi
+
+if [ -f "$CHR22_OUTPUT" ]; then
+    echo "ðŸ” First 3 genes from chromosome 22:"
+    grep "^>" "$CHR22_OUTPUT" | head -n 3 | while read line; do
+        echo "  â€¢ $(echo "$line" | cut -d' ' -f1,7)"
+    done
+fi
+
+echo ""
+echo "âœ… Extraction complete! Check the extracted_genes/ directory for results."
+echo "ðŸ’¡ To validate: grep -c '^>' extracted_genes/*.fa"
+------------------------END SCRIPT--------------
+```
+
+
 ## Step 8: Prepare Sequence Database for Alignment with makeblastdb
 ```
-# Create a BLAST database called 'human_chr1' for BLAST alignments.  Note that '-dbtype nucl' prepares a nucleotide database.  How would you prepare a protein database?
+# Create a BLAST database called 'human_chr22' for BLAST alignments.  Note that '-dbtype nucl' prepares a nucleotide database.  How would you prepare a protein database?
 cd data/genome/
 makeblastdb -in Homo_sapiens.GRCh38.dna.chromosome.22.fa -dbtype nucl -out human_chr22
 ```
@@ -131,7 +281,7 @@ mkdir -p results/blast results/smith_waterman
 
 # Run the nucleotide-nucleotide BLAST alignment with blastn to see which cDNA align to chromosome 22 
 blastn -query data/cdna/Homo_sapiens.GRCh38.cdna.all.fa \
-       -db data/genome/22 \
+       -db data/genome/human_chr22 \
        -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore" \
        -out results/blast/blast_alignment.tsv
 
